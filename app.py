@@ -5,7 +5,7 @@ from psycopg2 import sql
 dbname = "sampledb"
 user = "user8BV"
 password = "ANI3OSDTJsYCUH07"
-host = "localhost"  # or the specific host if it's not local
+host = "postgresql.playground.svc.cluster.local"  # or the specific host if it's not local
 
 # Connect to your postgres DB
 conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host)
