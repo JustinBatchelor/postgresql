@@ -38,6 +38,7 @@ def check_table_exists(conn, table_name):
 # Connect to the database
 conn = connect_to_db(dbname, user, password, host)
 
+
 # Check if table exists
 table_name = "example_table"
 if conn is not None:
@@ -46,17 +47,19 @@ if conn is not None:
     else:
         print(f"Table {table_name} does not exist.")
 
-    # Close the connection
-    conn.close()
 else:
     print("Connection to database failed.")
+    exit()
+
+cur = conn.cursor()
 
 # Retrieve and print all records from the table
-# cur.execute("SELECT * FROM example_table;")
-# rows = cur.fetchall()
-# for row in rows:
-#     print(row)
+cur.execute("SELECT * FROM example_table;")
+rows = cur.fetchall()
+for row in rows:
+    print(row)
 
-# # Close the cursor and connection
-# cur.close()
+# Close the cursor and connection
+cur.close()
+# Close the connection
 conn.close()
