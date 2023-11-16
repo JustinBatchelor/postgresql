@@ -36,30 +36,31 @@ def check_table_exists(conn, table_name):
     return exists
 
 # Connect to the database
-conn = connect_to_db(dbname, user, password, host)
+while True:
+    conn = connect_to_db(dbname, user, password, host)
 
 
-# Check if table exists
-table_name = "example_table"
-if conn is not None:
-    if check_table_exists(conn, table_name):
-        print(f"Table {table_name} exists.")
+    # Check if table exists
+    table_name = "example_table"
+    if conn is not None:
+        if check_table_exists(conn, table_name):
+            print(f"Table {table_name} exists.")
+        else:
+            print(f"Table {table_name} does not exist.")
+
     else:
-        print(f"Table {table_name} does not exist.")
+        print("Connection to database failed.")
+        exit()
 
-else:
-    print("Connection to database failed.")
-    exit()
+    cur = conn.cursor()
 
-cur = conn.cursor()
+    # Retrieve and print all records from the table
+    cur.execute("SELECT * FROM example_table;")
+    rows = cur.fetchall()
+    for row in rows:
+        print(row)
 
-# Retrieve and print all records from the table
-cur.execute("SELECT * FROM example_table;")
-rows = cur.fetchall()
-for row in rows:
-    print(row)
-
-# # Close the cursor and connection
-# cur.close()
-# # Close the connection
-# conn.close()
+    # Close the cursor and connection
+    cur.close()
+    # Close the connection
+    conn.close()
