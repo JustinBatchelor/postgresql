@@ -1,4 +1,5 @@
 import psycopg2
+import time
 from psycopg2 import sql
 
 # Database connection parameters
@@ -64,3 +65,4 @@ while True:
     cur.close()
     # Close the connection
     conn.close()
+    time.sleep(30)
