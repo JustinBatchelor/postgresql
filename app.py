@@ -7,32 +7,56 @@ user = "user8BV"
 password = "ANI3OSDTJsYCUH07"
 host = "postgresql.playground.svc.cluster.local"  # or the specific host if it's not local
 
-# Connect to your postgres DB
-conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host)
+def connect_to_db(dbname, user, password, host):
+    """Connect to the PostgreSQL database server"""
+    conn = None
+    try:
+        # Connect to the PostgreSQL server
+        conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host)
+    except Exception as e:
+        print(f"The error '{e}' occurred")
+    return conn
 
-# Open a cursor to perform database operations
-cur = conn.cursor()
+def check_table_exists(conn, table_name):
+    """Check if a table exists in the current database."""
+    exists = False
+    try:
+        # Create a cursor object
+        cur = conn.cursor()
 
-# Check if the table exists, and create it if it doesn't
-cur.execute("SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_name=%s);", ('example-table',))
-if not cur.fetchone()[0]:
-    cur.execute("CREATE TABLE example_table (id serial PRIMARY KEY, data varchar);")
+        # Check if table exists
+        cur.execute("SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_name=%s);", (table_name,))
+        exists = cur.fetchone()[0]
 
-# Check if there's at least one entry in the table
-cur.execute("SELECT COUNT(*) FROM example_table;")
-if cur.fetchone()[0] == 0:
-    # Insert a row if the table is empty
-    cur.execute("INSERT INTO example_table (data) VALUES ('Sample Data');")
+        # Close the cursor
+        cur.close()
+    except Exception as e:
+        print(f"The error '{e}' occurred")
+    
+    return exists
 
-# Commit the transaction
-conn.commit()
+# Connect to the database
+conn = connect_to_db(dbname, user, password, host)
+
+# Check if table exists
+table_name = "example_table"
+if conn is not None:
+    if check_table_exists(conn, table_name):
+        print(f"Table {table_name} exists.")
+    else:
+        print(f"Table {table_name} does not exist.")
+
+    # Close the connection
+    conn.close()
+else:
+    print("Connection to database failed.")
 
 # Retrieve and print all records from the table
-cur.execute("SELECT * FROM example_table;")
-rows = cur.fetchall()
-for row in rows:
-    print(row)
+# cur.execute("SELECT * FROM example_table;")
+# rows = cur.fetchall()
+# for row in rows:
+#     print(row)
 
-# Close the cursor and connection
-cur.close()
+# # Close the cursor and connection
+# cur.close()
 conn.close()
