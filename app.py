@@ -59,7 +59,7 @@ rows = cur.fetchall()
 for row in rows:
     print(row)
 
-# Close the cursor and connection
-cur.close()
-# Close the connection
-conn.close()
+# # Close the cursor and connection
+# cur.close()
+# # Close the connection
+# conn.close()
